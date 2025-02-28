@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Traditional Korean Mystical Adventure</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif;
+      background-color: #fefbd8;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fffdfa;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .scene {
+      margin-bottom: 20px;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #8fc1e3;
+      color: #fff;
+      font-size: 16px;
+    }
+    .options button:hover {
+      background-color: #7aa8ce;
+      cursor: pointer;
+    }
+    .restart {
+      background-color: #e38f8f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="scene" class="scene"></div>
+    <div id="options" class="options"></div>
+  </div>
+  
+  <script>
+    // Define the adventure scenes inspired by Korean folklore.
+    const scenes = {
+      start: {
+        text:
+`You stand at the heart of a traditional hanok village, bathed in the gentle light of stars and moon.  
+Before you lie three shimmering paths:
+• One path leads into the Tiger Forest with your brave friend Tae-yang,  
+• Another beckons you to a mystical feast with the cheerful Moonlight Goblin,  
+• The third winds down a secret forest trail.  
+Which path will you choose?`,
+        options: [
+          { text: "Venture into Tiger Forest with Tae-yang", next: "tiger_forest" },
+          { text: "Attend the mystical feast with Moonlight Goblin", next: "goblin_party" },
+          { text: "Explore the secret forest trail", next: "mystic_forest" }
+        ]
+      },
+      tiger_forest: {
+        text:
+`Accompanied by Tae-yang, you enter Tiger Forest—a land where gentle tigers play with their cubs  
+and laughter fills the warm air.`,
+        options: [
+          { text: "Soar into the sky for a birds-eye view", next: "sky_realm" },
+          { text: "Discover hidden secrets with tiger friends", next: "secret_cave" },
+          { text: "Return to the village", next: "start" }
+        ]
+      },
+      goblin_party: {
+        text:
+`You step into a grand feast hall with Moonlight Goblin.  
+Traditional dances, delicious treats, and the echo of joyful goblin laughter create an enchanting world.`,
+        options: [
+          { text: "Learn a traditional dance with the goblins", next: "dance_class" },
+          { text: "Embark on a moonlit mini-adventure", next: "moonlit_garden" },
+          { text: "Return to the village", next: "start" }
+        ]
+      },
+      mystic_forest: {
+        text:
+`Meandering along a quiet forest path, you discover a serene pond.  
+The moon reflects softly on its surface as whispers of ancient legends fill the air.`,
+        options: [
+          { text: "Find the glowing stone by the pond", next: "magic_stone" },
+          { text: "Venture deeper into the forest", next: "deep_forest" },
+          { text: "Return to the village", next: "start" }
+        ]
+      },
+      sky_realm: {
+        text:
+`You and Tae-yang take to the skies on a wondrous ride among the clouds.  
+High above, you meet your starlight friend Han-byul.`,
+        options: [
+          { text: "Listen to Han-byul’s tales of the stars", next: "star_tales" },
+          { text: "Explore a castle made entirely of clouds", next: "cloud_castle" },
+          { text: "Return to Tiger Forest", next: "tiger_forest" }
+        ]
+      },
+      secret_cave: {
+        text:
+`Deep within Tiger Forest, you stumble upon a hidden cave.  
+Bathed in warm light, its walls whisper magical stories of old.`,
+        options: [
+          { text: "Explore deep within the cave", next: "cave_heart" },
+          { text: "Listen to the ancient tales etched on the walls", next: "cave_story" },
+          { text: "Return to the forest", next: "tiger_forest" }
+        ]
+      },
+      dance_class: {
+        text:
+`In a lively dance class with the goblins, you move gently to the rhythm of traditional music.  
+Every step makes the world feel a little more magical.`,
+        options: [
+          { text: "Delve deeper into the magic of dance", next: "magic_dance" },
+          { text: "Discover the secret behind their dance", next: "dance_secret" },
+          { text: "Return to the feast hall", next: "goblin_party" }
+        ]
+      },
+      moonlit_garden: {
+        text:
+`Under the soft glow of moonlight, a mystical garden unfolds.  
+The flowers and trees seem ready to share the legends of ancient times.`,
+        options: [
+          { text: "Uncover the garden’s hidden legends", next: "garden_legend" },
+          { text: "Sit back and listen to the garden’s soul", next: "garden_soul" },
+          { text: "Return to the feast hall", next: "goblin_party" }
+        ]
+      },
+      magic_stone: {
+        text:
+`At the edge of the pond, you pick up a radiant stone pulsing with legend.  
+Its magical energy hints at adventures yet to come.`,
+        options: [
+          { text: "Use the stone’s power to unlock a mystical door", next: "magic_door" },
+          { text: "Carry the stone deeper into the forest", next: "deep_forest" },
+          { text: "Return to the pond", next: "mystic_forest" }
+        ]
+      },
+      deep_forest: {
+        text:
+`Deep in the forest, age-old legends and mystical creatures welcome you.  
+The sounds of nature weave together into a captivating adventure.`,
+        options: [
+          { text: "Meet the forest guardian—the ancient tree spirit", next: "forest_guardian" },
+          { text: "Search for a glimmer of light in the depths", next: "forest_light" },
+          { text: "Return to the serene pond", next: "mystic_forest" }
+        ]
+      },
+      star_tales: {
+        text:
+`With Han-byul by your side, you listen to enchanting tales of the stars,  
+slowly unveiling the mysteries of the universe.`,
+        options: [
+          { text: "Learn more about the secrets of the stars", next: "cosmic_secrets" },
+          { text: "Draw constellations with Han-byul", next: "star_drawing" },
+          { text: "Return to the skies", next: "sky_realm" }
+        ]
+      },
+      cloud_castle: {
+        text:
+`Floating within a castle made of clouds, you meet the gracious Cloud Queen,  
+who welcomes you with a warm smile and ancient tales.`,
+        options: [
+          { text: "Listen closely to the Cloud Queen’s tale", next: "queen_dialogue" },
+          { text: "Explore the hidden wonders of the castle", next: "castle_secret" },
+          { text: "Return to the skies", next: "sky_realm" }
+        ]
+      },
+      cave_heart: {
+        text:
+`Deep inside the cave, where soft light fills the darkness, you feel a peaceful presence.  
+A fragment of an ancient legend appears to speak to you.`,
+        options: [
+          { text: "Hear the tale of the cave’s heart", next: "cave_story" },
+          { text: "Search for the elusive shard of light", next: "light_shard" },
+          { text: "Head back to the cave entrance", next: "secret_cave" }
+        ]
+      },
+      cave_story: {
+        text:
+`The walls at the cave’s entrance are etched with old stories that warm your heart,  
+offering hope and comfort in every line.`,
+        options: [
+          { text: "Listen to more ancient stories", next: "cave_heart" },
+          { text: "Invent a new tale of your own", next: "magic_dance" },
+          { text: "Return to the cave entrance", next: "secret_cave" }
+        ]
+      },
+      magic_dance: {
+        text:
+`The magic of music and dance courses through you as every move aligns with the rhythm.  
+In this enchanted world, endless possibilities come to life.`,
+        options: [
+          { text: "Discover more hidden secrets of the dance", next: "dance_secret" },
+          { text: "Follow the dance trail for a new adventure", next: "dance_story" },
+          { text: "Return to the dance class", next: "dance_class" }
+        ]
+      },
+      dance_secret: {
+        text:
+`Deep within the traditional dance, a secret story unfolds—a tale that began in the goblin forest  
+and continues to echo in your heart.`,
+        options: [
+          { text: "Search for the hidden secret", next: "secret_cave" },
+          { text: "Listen further to the dance’s tale", next: "dance_story" },
+          { text: "Return to the dance class", next: "dance_class" }
+        ]
+      },
+      dance_story: {
+        text:
+`As the rhythm weaves its magic, stories unfold before your eyes—a blend of tradition and imagination  
+that guides you on a unique adventure.`,
+        options: [
+          { text: "Let the magic of dance carry you further", next: "magic_dance" },
+          { text: "Create a brand-new starry tale", next: "star_tales" },
+          { text: "Return to the dance class", next: "dance_class" }
+        ]
+      },
+      garden_legend: {
+        text:
+`In the heart of the mystical garden, an ancient legend awakens.  
+Listen carefully as the flowers and trees share their timeless stories.`,
+        options: [
+          { text: "Discover more secrets of the garden", next: "magic_stone" },
+          { text: "Soak in the scents and sounds of nature", next: "garden_soul" },
+          { text: "Return to the moonlit garden", next: "moonlit_garden" }
+        ]
+      },
+      garden_soul: {
+        text:
+`Under a gentle moon, the garden fills you with a calm energy.  
+The rustle of leaves and soft hum of nature soothe your soul.`,
+        options: [
+          { text: "Seek out nature’s hidden energy", next: "forest_light" },
+          { text: "Unite with the forest guardian", next: "forest_guardian" },
+          { text: "Return to the moonlit garden", next: "moonlit_garden" }
+        ]
+      },
+      forest_guardian: {
+        text:
+`Deep in the forest, the mighty tree spirit—a guardian of nature—welcomes you with a tender smile.  
+Ancient wisdom and timeless legends flow from this gentle presence.`,
+        options: [
+          { text: "Engage in a heartfelt chat with the tree spirit", next: "tree_dialogue" },
+          { text: "Learn more of the guardian's wisdom", next: "guardian_wisdom" },
+          { text: "Return to the deep forest", next: "deep_forest" }
+        ]
+      },
+      forest_light: {
+        text:
+`In the depths of the forest, a flickering light guides you forward,  
+whispering age-old legends as you follow its trail.`,
+        options: [
+          { text: "Follow the secret path illuminated by the light", next: "magic_door" },
+          { text: "Reach out and feel the gentle glow", next: "light_shard" },
+          { text: "Return to the deep forest", next: "deep_forest" }
+        ]
+      },
+      light_shard: {
+        text:
+`As you grasp the shard of light, a burst of magic rushes through you—  
+a key that unlocks the door to new adventures.`,
+        options: [
+          { text: "Embark on a brand new adventure", next: "start" },
+          { text: "Examine the shard of light more closely", next: "forest_light" },
+          { text: "Take another path to the cloud castle", next: "cloud_castle" }
+        ]
+      },
+      magic_door: {
+        text:
+`Before you stands a mystical door from ancient legend;  
+a portal that connects the realms of past and future, dreams and reality.`,
+        options: [
+          { text: "Open the door and step inside", next: "cave_heart" },
+          { text: "Study the door and listen to its story", next: "cave_story" },
+          { text: "Return to the home base", next: "start" }
+        ]
+      },
+      queen_dialogue: {
+        text:
+`The Cloud Queen greets you warmly, her eyes holding the secrets of forgotten legends.  
+Within her tale lies magic just waiting to be heard.`,
+        options: [
+          { text: "Listen intently to the queen’s story", next: "cosmic_secrets" },
+          { text: "Share a dream with the queen", next: "star_tales" },
+          { text: "Step outside the castle once more", next: "cloud_castle" }
+        ]
+      },
+      cosmic_secrets: {
+        text:
+`Bathed in starlight and the glow of distant galaxies, profound cosmic mysteries envelop you.  
+Each secret unfurls like a page in the book of the universe.`,
+        options: [
+          { text: "Uncover more cosmic secrets", next: "star_drawing" },
+          { text: "Savor the stars with Han-byul", next: "star_tales" },
+          { text: "Return to the starting path", next: "start" }
+        ]
+      },
+      star_drawing: {
+        text:
+`Alongside Han-byul, you sketch the constellations and listen to the legends behind each star.  
+Magic fills every stroke as your adventure deepens.`,
+        options: [
+          { text: "Hear more tales of the stars", next: "cosmic_secrets" },
+          { text: "Create a brand-new celestial story", next: "dance_story" },
+          { text: "Return to the skies", next: "sky_realm" }
+        ]
+      },
+      guardian_wisdom: {
+        text:
+`The ancient tree spirit imparts timeless wisdom as softly as the rustle of leaves.  
+Every word feels like a gentle embrace from nature itself.`,
+        options: [
+          { text: "Listen to more of the guardian’s wisdom", next: "tree_dialogue" },
+          { text: "Follow the guardian’s path", next: "forest_guardian" },
+          { text: "Return to the deep forest", next: "deep_forest" }
+        ]
+      },
+      tree_dialogue: {
+        text:
+`In a deep conversation with the tree spirit, nature’s whispers and echoes of old legends intertwine.  
+Every moment becomes a cherished story.`,
+        options: [
+          { text: "Hear even more hidden stories", next: "guardian_wisdom" },
+          { text: "Immerse yourself in nature’s whispers", next: "forest_light" },
+          { text: "Return to the guardian’s wisdom", next: "forest_guardian" }
+        ]
+      }
+    };
+    
+    // Function to display the current scene.
+    function displayScene(sceneKey) {
+      const scene
