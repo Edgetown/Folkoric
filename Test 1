@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>한국 전통 신비 모험</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif;
+      background-color: #fefbd8;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fffdfa;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .scene {
+      margin-bottom: 20px;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #8fc1e3;
+      color: #fff;
+      font-size: 16px;
+    }
+    .options button:hover {
+      background-color: #7aa8ce;
+      cursor: pointer;
+    }
+    .restart {
+      background-color: #e38f8f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="scene" class="scene"></div>
+    <div id="options" class="options"></div>
+  </div>
+  
+  <script>
+    // Adventure scenes inspired by Korean folklore.
+    const scenes = {
+      start: {
+        text: 
+`당신은 별빛과 달빛이 감싸는 한옥 마을 한복판에 서 있습니다.
+마을 외곽에는 눈부시게 빛나는 세 갈래의 길이 보입니다.
+한쪽 길에는 용감한 친구 ‘태양’과 함께 떠나는 호랑이 숲 모험,
+또 한쪽 길에는 유쾌한 ‘달빛 도깨비’와 함께하는 신비한 연회,
+마지막 길은 고요한 숲속으로 이어지는 비밀의 길입니다.
+어느 길로 가볼까요?`,
+        options: [
+          { text: "태양과 함께 호랑이 숲으로 모험 떠나기", next: "tiger_forest" },
+          { text: "달빛 도깨비와 신비한 연회 참석하기", next: "goblin_party" },
+          { text: "비밀의 숲길 탐험하기", next: "mystic_forest" }
+        ]
+      },
+      tiger_forest: {
+        text: 
+`태양과 함께 들어선 호랑이 숲은 따뜻한 눈빛을 가진 호랑이와 놀고 있는 작은 호랑이들이 가득합니다.
+숲은 따뜻한 웃음소리와 경쾌한 발걸음으로 여러분을 반깁니다.`,
+        options: [
+          { text: "하늘을 날며 숲 전체 훑어보기", next: "sky_realm" },
+          { text: "호랑이 친구들과 숲의 비밀 찾기", next: "secret_cave" },
+          { text: "마을로 돌아가기", next: "start" }
+        ]
+      },
+      goblin_party: {
+        text: 
+`달빛 도깨비와 함께하는 연회장에 발을 들이자,
+전통 춤과 맛있는 음식, 도깨비들의 유쾌한 웃음소리가 가득한 놀라운 세상이 펼쳐집니다.`,
+        options: [
+          { text: "도깨비와 함께 전통 춤 배우기", next: "dance_class" },
+          { text: "달빛 아래 작은 모험 떠나기", next: "moonlit_garden" },
+          { text: "마을로 돌아가기", next: "start" }
+        ]
+      },
+      mystic_forest: {
+        text: 
+`고요한 숲길을 따라 걷다 보면, 고요한 연못이 나타납니다.
+연못 위에는 달빛이 잔잔하게 비치며, 오래된 전설의 속삭임이 들려옵니다.`,
+        options: [
+          { text: "연못 속 빛나는 돌 찾기", next: "magic_stone" },
+          { text: "숲속 깊은 곳으로 모험 떠나기", next: "deep_forest" },
+          { text: "마을로 돌아가기", next: "start" }
+        ]
+      },
+      sky_realm: {
+        text: 
+`태양과 함께 하늘을 나는 모험에 올라섭니다.
+구름 사이로 펼쳐진 다채로운 세상에서 별빛 친구 ‘한별’을 만납니다.`,
+        options: [
+          { text: "한별과 만나 별들의 이야기 듣기", next: "star_tales" },
+          { text: "구름 위의 성 탐험하기", next: "cloud_castle" },
+          { text: "다시 호랑이 숲으로 돌아가기", next: "tiger_forest" }
+        ]
+      },
+      secret_cave: {
+        text: 
+`호랑이 숲 한복판에서 비밀 동굴을 발견했습니다.
+동굴 안은 따스한 빛으로 가득 차 있고, 마법 같은 이야기들이 숨겨져 있습니다.`,
+        options: [
+          { text: "동굴 깊숙이 탐험하기", next: "cave_heart" },
+          { text: "동굴 벽에 새겨진 이야기 듣기", next: "cave_story" },
+          { text: "밖으로 나와 호랑이들과 만나기", next: "tiger_forest" }
+        ]
+      },
+      dance_class: {
+        text: 
+`도깨비들과 함께하는 전통 춤 교실에서 리듬에 맞춰 몸을 움직입니다.
+춤을 추며 온 세상이 마법처럼 변하는 것을 느껴보세요.`,
+        options: [
+          { text: "춤의 마법 속으로 더 깊게", next: "magic_dance" },
+          { text: "춤의 비밀을 알아보기", next: "dance_secret" },
+          { text: "연회실로 돌아가기", next: "goblin_party" }
+        ]
+      },
+      moonlit_garden: {
+        text: 
+`달빛 아래, 신비한 정원이 조용히 펼쳐집니다.
+정원의 꽃과 나무가 열어주는 이야기 속으로 들어가 보세요.`,
+        options: [
+          { text: "정원의 전설 속 비밀 탐험하기", next: "garden_legend" },
+          { text: "잔잔히 앉아 마음의 소리 듣기", next: "garden_soul" },
+          { text: "연회실로 돌아가기", next: "goblin_party" }
+        ]
+      },
+      magic_stone: {
+        text:
+`연못 가장자리에 놓인 빛나는 돌을 주워 보았습니다.
+전설 속 마법의 힘이 깃든 돌은 새로운 모험의 시작 단서가 됩니다.`,
+        options: [
+          { text: "돌의 힘으로 신비의 문 열기", next: "magic_door" },
+          { text: "돌을 들고 숲속 깊은 곳으로 가기", next: "deep_forest" },
+          { text: "연못으로 돌아가기", next: "mystic_forest" }
+        ]
+      },
+      deep_forest: {
+        text: 
+`깊은 숲속에서는 오래된 전설과 신비로운 생명체들이 당신을 반깁니다.
+이곳에서 자연의 소리와 이야기가 하나 되어 놀라운 모험을 선사합니다.`,
+        options: [
+          { text: "숲의 수호자, 나무 정령과 인사하기", next: "forest_guardian" },
+          { text: "숲 깊은 곳에서 반짝이는 빛 찾기", next: "forest_light" },
+          { text: "연못으로 돌아가기", next: "mystic_forest" }
+        ]
+      },
+      star_tales: {
+        text: 
+`한별과 함께 별들의 이야기를 듣습니다.
+별빛 속에서 우주의 신비로움을 조금씩 깨닫게 되는 시간을 가집니다.`,
+        options: [
+          { text: "별들의 비밀을 더 알아보기", next: "cosmic_secrets" },
+          { text: "한별과 별자리 그리기", next: "star_drawing" },
+          { text: "다시 하늘 세계로 돌아가기", next: "sky_realm" }
+        ]
+      },
+      cloud_castle: {
+        text:
+`구름으로 만들어진 성에 도착했습니다.
+성 안에는 온화한 미소의 구름 여왕이 기다리고 있어요.`,
+        options: [
+          { text: "구름 여왕의 이야기에 귀 기울이기", next: "queen_dialogue" },
+          { text: "성 내부 비밀 탐험하기", next: "castle_secret" },
+          { text: "다시 하늘 세계로 돌아가기", next: "sky_realm" }
+        ]
+      },
+      cave_heart: {
+        text:
+`동굴 깊은 곳, 따사로운 빛과 함께 마음의 평화를 느낍니다.
+전설의 한 조각이 느껴지는 이곳에서 깊은 깨달음을 얻습니다.`,
+        options: [
+          { text: "동굴의 심장이 들려주는 이야기 듣기", next: "heart_story" },
+          { text: "빛의 조각 찾기", next: "light_shard" },
+          { text: "다시 동굴 입구로 나가기", next: "secret_cave" }
+        ]
+      },
+      cave_story: {
+        text:
+`동굴 입구 벽에 새겨진 옛 이야기들이 당신의 마음을 따뜻하게 합니다.
+이 이야기는 언제나 위로와 희망을 줍니다.`,
+        options: [
+          { text: "더 많은 이야기 듣기", next: "heart_story" },
+          { text: "새로운 이야기를 만들어보기", next: "magic_dance" },
+          { text: "다시 동굴 입구로 돌아가기", next: "secret_cave" }
+        ]
+      },
+      magic_dance: {
+        text:
+`음악과 춤의 마법이 온몸에 번집니다.
+모든 것이 리듬에 맞춰 움직이는 이 세계에서 새로운 가능성을 느껴보세요.`,
+        options: [
+          { text: "춤의 비밀을 더 알아보기", next: "dance_secret" },
+          { text: "춤 속 이야기를 찾아 모험하기", next: "dance_story" },
+          { text: "연회실로 돌아가기", next: "dance_class" }
+        ]
+      },
+      dance_secret: {
+        text:
+`전통 춤 속에 숨겨진 비밀의 이야기가 여러분을 감싸옵니다.
+도깨비의 숲에서 시작된 이 신비로운 모험은 마음에 깊은 울림을 줍니다.`,
+        options: [
+          { text: "숨겨진 비밀을 찾아보기", next: "secret_cave" },
+          { text: "춤 속 이야기를 계속 듣기", next: "dance_story" },
+          { text: "연회실로 돌아가기", next: "dance_class" }
+        ]
+      },
+      dance_story: {
+        text:
+`춤의 리듬 속에서 이야기들이 펼쳐집니다.
+새로운 상상력과 전통의 소리가 어우러져 모험을 이끕니다.`,
+        options: [
+          { text: "춤의 마법을 따라 모험 계속하기", next: "magic_dance" },
+          { text: "색다른 별의 이야기 만들어가기", next: "star_tales" },
+          { text: "다시 춤 교실로 돌아가기", next: "dance_class" }
+        ]
+      },
+      garden_legend: {
+        text:
+`신비로운 정원의 한가운데, 오래된 전설이 살아 있습니다.
+꽃과 나무가 들려주는 이야기에 귀 기울여 보세요.`,
+        options: [
+          { text: "정원의 비밀을 더 알아보기", next: "magic_stone" },
+          { text: "정원의 향기와 소리 느껴보기", next: "garden_soul" },
+          { text: "연회실로 돌아가기", next: "moonlit_garden" }
+        ]
+      },
+      garden_soul: {
+        text:
+`달빛 아래 정원의 잔잔한 소리와 향기로 마음이 차분해집니다.
+새로운 에너지가 스며드는 느낌이에요.`,
+        options: [
+          { text: "자연의 에너지 근원 찾기", next: "forest_light" },
+          { text: "숲의 수호자와 하나되기", next: "forest_guardian" },
+          { text: "다시 연회실로 돌아가기", next: "moonlit_garden" }
+        ]
+      },
+      forest_guardian: {
+        text:
+`깊은 숲속, 거대한 나무 정령이 부드러운 미소로 당신을 맞이합니다.
+자연의 지혜와 오래된 이야기가 이곳에 가득합니다.`,
+        options: [
+          { text: "나무 정령과 자세히 이야기 나누기", next: "tree_dialogue" },
+          { text: "수호자의 지혜 배우기", next: "guardian_wisdom" },
+          { text: "다시 숲속으로 돌아가기", next: "deep_forest" }
+        ]
+      },
+      forest_light: {
+        text:
+`숲 깊은 곳에서 반짝이는 빛이 길을 비추며 오래된 전설을 전해줍니다.
+그 빛의 신비를 따라가 보세요.`,
+        options: [
+          { text: "빛의 비밀을 따라가기", next: "magic_door" },
+          { text: "빛에 손을 내밀어 보기", next: "light_shard" },
+          { text: "다시 숲속으로 돌아가기", next: "deep_forest" }
+        ]
+      },
+      light_shard: {
+        text:
+`빛의 파편을 움켜쥔 순간, 마법 같은 에너지가 느껴집니다.
+이 파편은 새로운 모험의 열쇠가 됩니다.`,
+        options: [
+          { text: "새로운 모험 시작하기", next: "start" },
+          { text: "빛의 파편 더 살펴보기", next: "forest_light" },
+          { text: "또 다른 길로 나아가기", next: "cloud_castle" }
+        ]
+      },
+      magic_door: {
+        text:
+`전설 속 신비로운 문 앞에 서 있습니다.
+이 문은 과거와 미래, 꿈과 현실을 잇는 통로입니다.`,
+        options: [
+          { text: "문을 열고 안으로 들어가기", next: "cave_heart" },
+          { text: "문을 살펴보고 이야기 듣기", next: "cave_story" },
+          { text: "다시 집으로 돌아가기", next: "start" }
+        ]
+      },
+      queen_dialogue: {
+        text:
+`구름 여왕이 온화한 미소로 당신을 맞이합니다.
+여왕의 오래된 이야기 속에 잊혀진 전설이 숨어 있습니다.`,
+        options: [
+          { text: "여왕의 이야기에 귀 기울이기", next: "cosmic_secrets" },
+          { text: "여왕과 함께 꿈꾸기", next: "star_tales" },
+          { text: "다시 성 밖으로 나오기", next: "cloud_castle" }
+        ]
+      },
+      cosmic_secrets: {
+        text:
+`별빛과 은하의 신비가 마음을 감싸며, 우주의 깊은 이야기를 들려줍니다.
+새로운 비밀들이 하나씩 열립니다.`,
+        options: [
+          { text: "우주의 신비 더 알아보기", next: "star_drawing" },
+          { text: "한별과 함께 별을 만끽하기", next: "star_tales" },
+          { text: "처음 길로 돌아가기", next: "start" }
+        ]
+      },
+      star_drawing: {
+        text:
+`한별과 함께 별자리와 이야기를 그리며, 각 별에 담긴 전설을 들어봅니다.
+그림 속 모험이 더욱 특별해집니다.`,
+        options: [
+          { text: "별들의 이야기를 더 듣기", next: "cosmic_secrets" },
+          { text: "새로운 별의 이야기를 만들어보기", next: "dance_story" },
+          { text: "다시 하늘 세계로 돌아가기", next: "sky_realm" }
+        ]
+      },
+      guardian_wisdom: {
+        text:
+`숲의 수호자 나무 정령이 오래된 지혜와 전설을 속삭입니다.
+시간이 멈춘 듯 부드러운 목소리에 마음이 열립니다.`,
+        options: [
+          { text: "더 많은 지혜 듣기", next: "tree_dialogue" },
+          { text: "수호자의 길 함께 걷기", next: "forest_guardian" },
+          { text: "다시 숲속으로 돌아가기", next: "deep_forest" }
+        ]
+      },
+      tree_dialogue: {
+        text:
+`나무 정령과 나누는 깊은 대화 속에서 자연의 숨결과 오래된 기억들이 스며듭니다.
+모든 순간이 소중한 전설로 채워집니다.`,
+        options: [
+          { text: "더 깊은 이야기 듣기", next: "guardian_wisdom" },
+          { text: "자연의 이야기에 몸 맡기기", next: "forest_light" },
+          { text: "다시 숲속으로 돌아가기", next: "forest_guardian" }
+        ]
+      }
+    };
+
+    // Update the DOM with the current scene.
+    function displayScene(sceneKey) {
+      const scene = scenes[sceneKey];
+      const sceneDiv = document.getElementById("scene");
+      const optionsDiv = document.getElementById("options");
+      
+      // Insert scene text with proper line breaks.
+      sceneDiv.innerHTML = `<p>${scene.text.replace(/\n/g, '<br/>')}</p>`;
+      optionsDiv.innerHTML = "";
+      
+      // If no options are left, present a restart button.
+      if (!scene.options || scene.options.length === 0) {
+        const restartBtn = document.createElement("button");
+        restartBtn.textContent = "모험 다시 시작하기";
+        restartBtn.className = "restart";
+        restartBtn.onclick = () => displayScene("start");
+        optionsDiv.appendChild(restartBtn);
+        return;
+      }
+      
+      // Create buttons for available options.
+      scene.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option.text;
+        btn.onclick = () => displayScene(option.next);
+        optionsDiv.appendChild(btn);
+      });
+    }
+    
+    // Begin the adventure.
+    displayScene("start");
+  </script>
+</body>
+</html>
